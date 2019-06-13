@@ -52,6 +52,7 @@ func tftpHandleRRQ(res *tftp.RRQresponse) {
 	}
 
 	if err := res.WriteOACK(); err != nil {
+		status = http.StatusInternalServerError
 		log.Printf("%s: Failed to write OACK: %s", tftpLogRequestPrefix(res), err)
 		return
 	}

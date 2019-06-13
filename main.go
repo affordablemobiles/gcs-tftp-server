@@ -13,6 +13,7 @@ import (
 )
 
 var (
+	TFTP_UDP_HOST		 string = os.Getenv("TFTP_UDP_HOST")
 	TFTP_ENABLE_HTTP     string = os.Getenv("TFTP_ENABLE_HTTP")
 	GCS_CREDENTIALS_FILE string = mustGetenv("GCS_CREDENTIALS_FILE")
 	GCS_BUCKET           string = mustGetenv("GCS_BUCKET")
@@ -41,7 +42,7 @@ func main() {
 		}()
 	}
 
-	addr, err := net.ResolveUDPAddr("udp", ":69")
+	addr, err := net.ResolveUDPAddr("udp", TFTP_UDP_HOST+":69")
 	if err != nil {
 		log.Fatalf("Failed to resolve UDP address: %s", err)
 	}
