@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"cloud.google.com/go/storage"
-	"github.com/tftp-go-team/libgotftp/src"
+	"github.com/a1comms/libgotftp/src"
 	"google.golang.org/api/option"
 )
 
