@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/a1comms/libgotftp/src"
+	"github.com/tftp-go-team/libgotftp/src"
 )
 
 func tftpHandleRRQ(res *tftp.RRQresponse) {
