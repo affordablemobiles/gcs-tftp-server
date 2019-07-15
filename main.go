@@ -35,7 +35,7 @@ func main() {
 		go func() {
 			log.Printf("Starting HTTP endpoint on port 8080")
 			log.Fatalf(
-				http.ListenAndServe(":8080", http.StripPrefix("/",
+				http.ListenAndServe(TFTP_UDP_HOST+":8080", http.StripPrefix("/",
 					http.HandlerFunc(httpHandleRequest),
 				)).Error(),
 			)
