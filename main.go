@@ -13,10 +13,10 @@ import (
 )
 
 var (
-	TFTP_LISTEN_HOST		 string = os.Getenv("TFTP_LISTEN_HOST")
-	TFTP_REPLY_HOST		 string = os.Getenv("TFTP_REPLY_HOST")
+	TFTP_LISTEN_HOST     string = os.Getenv("TFTP_LISTEN_HOST")
+	TFTP_REPLY_HOST      string = os.Getenv("TFTP_REPLY_HOST")
 	TFTP_ENABLE_HTTP     string = os.Getenv("TFTP_ENABLE_HTTP")
-	HTTP_LISTEN_HOST		 string = os.Getenv("TFTP_LISTEN_HOST")
+	HTTP_LISTEN_HOST     string = os.Getenv("TFTP_LISTEN_HOST")
 	GCS_CREDENTIALS_FILE string = mustGetenv("GCS_CREDENTIALS_FILE")
 	GCS_BUCKET           string = mustGetenv("GCS_BUCKET")
 
@@ -35,7 +35,7 @@ func main() {
 
 	if TFTP_ENABLE_HTTP == "true" {
 		go func() {
-			log.Printf("Starting HTTP endpoint on port "+HTTP_LISTEN_HOST+":8080")
+			log.Printf("Starting HTTP endpoint on port " + HTTP_LISTEN_HOST + ":8080")
 			log.Fatalf(
 				http.ListenAndServe(HTTP_LISTEN_HOST+":8080", http.StripPrefix("/",
 					http.HandlerFunc(httpHandleRequest),

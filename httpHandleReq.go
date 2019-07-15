@@ -13,7 +13,7 @@ func httpHandleRequest(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now()
 	status := http.StatusOK
 	size := 0
-	defer func(){
+	defer func() {
 		httpLogRequest(startTime, status, size, r)
 	}()
 
