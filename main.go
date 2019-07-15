@@ -8,13 +8,15 @@ import (
 	"os"
 
 	"cloud.google.com/go/storage"
-	"github.com/tftp-go-team/libgotftp/src"
+	"github.com/a1comms/libgotftp/src"
 	"google.golang.org/api/option"
 )
 
 var (
-	TFTP_UDP_HOST		 string = os.Getenv("TFTP_UDP_HOST")
+	TFTP_LISTEN_HOST		 string = os.Getenv("TFTP_LISTEN_HOST")
+	TFTP_REPLY_HOST		 string = os.Getenv("TFTP_REPLY_HOST")
 	TFTP_ENABLE_HTTP     string = os.Getenv("TFTP_ENABLE_HTTP")
+	HTTP_LISTEN_HOST		 string = os.Getenv("TFTP_LISTEN_HOST")
 	GCS_CREDENTIALS_FILE string = mustGetenv("GCS_CREDENTIALS_FILE")
 	GCS_BUCKET           string = mustGetenv("GCS_BUCKET")
 
@@ -33,21 +35,26 @@ func main() {
 
 	if TFTP_ENABLE_HTTP == "true" {
 		go func() {
-			log.Printf("Starting HTTP endpoint on port 8080")
+			log.Printf("Starting HTTP endpoint on port "+HTTP_LISTEN_HOST+":8080")
 			log.Fatalf(
-				http.ListenAndServe(TFTP_UDP_HOST+":8080", http.StripPrefix("/",
+				http.ListenAndServe(HTTP_LISTEN_HOST+":8080", http.StripPrefix("/",
 					http.HandlerFunc(httpHandleRequest),
 				)).Error(),
 			)
 		}()
 	}
 
-	addr, err := net.ResolveUDPAddr("udp", TFTP_UDP_HOST+":69")
+	addr, err := net.ResolveUDPAddr("udp", TFTP_LISTEN_HOST+":69")
 	if err != nil {
 		log.Fatalf("Failed to resolve UDP address: %s", err)
 	}
 
-	server, err := tftp.NewTFTPServer(addr)
+	replyAddr, err := net.ResolveUDPAddr("udp", TFTP_REPLY_HOST+":0")
+	if err != nil {
+		log.Fatalf("Failed to resolve UDP address: %s", err)
+	}
+
+	server, err := tftp.NewTFTPServer(addr, replyAddr)
 	if err != nil {
 		log.Fatalf("Failed to listen for TFTP endpoint: %s", err)
 		return
