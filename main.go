@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 
 	"cloud.google.com/go/storage"
 	"github.com/a1comms/libgotftp/src"
@@ -15,6 +16,8 @@ import (
 var (
 	TFTP_LISTEN_HOST     string = os.Getenv("TFTP_LISTEN_HOST")
 	TFTP_REPLY_HOST      string = os.Getenv("TFTP_REPLY_HOST")
+	TFTP_REPLY_PORT_LOW  string = os.Getenv("TFTP_REPLY_PORT_LOW")
+	TFTP_REPLY_PORT_HIGH string = os.Getenv("TFTP_REPLY_PORT_HIGH")
 	TFTP_ENABLE_HTTP     string = os.Getenv("TFTP_ENABLE_HTTP")
 	HTTP_LISTEN_HOST     string = os.Getenv("TFTP_LISTEN_HOST")
 	GCS_CREDENTIALS_FILE string = mustGetenv("GCS_CREDENTIALS_FILE")
@@ -54,7 +57,29 @@ func main() {
 		log.Fatalf("Failed to resolve UDP address: %s", err)
 	}
 
-	server, err := tftp.NewTFTPServer(addr, replyAddr)
+	portLow, portHigh := 5000, 5004
+	if TFTP_REPLY_PORT_LOW != "" && TFTP_REPLY_PORT_HIGH != "" {
+		portLow, err = strconv.Atoi(TFTP_REPLY_PORT_LOW)
+		if err != nil {
+			log.Fatalf("Invalid TFTP_REPLY_PORT_LOW: %s", TFTP_REPLY_PORT_LOW)
+		}
+
+		portHigh, err = strconv.Atoi(TFTP_REPLY_PORT_HIGH)
+		if err != nil {
+			log.Fatalf("Invalid TFTP_REPLY_PORT_HIGH: %s", TFTP_REPLY_PORT_HIGH)
+		}
+
+		if portLow >= portHigh {
+			log.Fatalf("TFTP_REPLY_PORT_LOW higher than TFTP_REPLY_PORT_HIGH")
+		}
+	}
+
+	portArray := []int{}
+	for i := portLow; i <= portHigh; i++ {
+		portArray = append(portArray, i)
+	}
+
+	server, err := tftp.NewTFTPServer(addr, replyAddr, portArray)
 	if err != nil {
 		log.Fatalf("Failed to listen for TFTP endpoint: %s", err)
 		return
