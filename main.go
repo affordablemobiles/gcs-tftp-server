@@ -19,7 +19,7 @@ var (
 	TFTP_REPLY_PORT_LOW  string = os.Getenv("TFTP_REPLY_PORT_LOW")
 	TFTP_REPLY_PORT_HIGH string = os.Getenv("TFTP_REPLY_PORT_HIGH")
 	TFTP_ENABLE_HTTP     string = os.Getenv("TFTP_ENABLE_HTTP")
-	HTTP_LISTEN_HOST     string = os.Getenv("TFTP_LISTEN_HOST")
+	HTTP_LISTEN_HOST     string = os.Getenv("HTTP_LISTEN_HOST")
 	GCS_CREDENTIALS_FILE string = mustGetenv("GCS_CREDENTIALS_FILE")
 	GCS_BUCKET           string = mustGetenv("GCS_BUCKET")
 
