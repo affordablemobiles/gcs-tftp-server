@@ -1,9 +1,8 @@
-FROM golang:1.12 as build-env
+FROM golang:1.14 as build-env
 
 ADD . /go/src/github.com/a1comms/gcs-tftp-server
 WORKDIR /go/src/github.com/a1comms/gcs-tftp-server
 
-ARG GO111MODULE=on
 ARG CGO_ENABLED=0
 
 RUN go mod vendor
