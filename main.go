@@ -9,6 +9,7 @@ import (
 	"strconv"
 
 	"cloud.google.com/go/storage"
+	tftp "github.com/a1comms/libgotftp/src"
 )
 
 var (
