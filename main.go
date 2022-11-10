@@ -10,6 +10,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	tftp "github.com/a1comms/libgotftp/src"
+	"google.golang.org/api/option"
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 	TFTP_REPLY_PORT_HIGH string = os.Getenv("TFTP_REPLY_PORT_HIGH")
 	TFTP_ENABLE_HTTP     string = os.Getenv("TFTP_ENABLE_HTTP")
 	HTTP_LISTEN_HOST     string = os.Getenv("HTTP_LISTEN_HOST")
+	GCS_CREDENTIALS_FILE string = os.Getenv("GCS_CREDENTIALS_FILE")
 	GCS_BUCKET           string = mustGetenv("GCS_BUCKET")
 
 	storageBucket *storage.BucketHandle
@@ -27,7 +29,12 @@ var (
 func main() {
 	ctx := context.Background()
 
-	client, err := storage.NewClient(ctx)
+	opts := []option.ClientOption{}
+	if GCS_CREDENTIALS_FILE != "" {
+		opts = append(opts, option.WithCredentialsFile(GCS_CREDENTIALS_FILE))
+	}
+
+	client, err := storage.NewClient(ctx, opts...)
 	if err != nil {
 		log.Fatalf("Storage Client Error: %s", err)
 	}
